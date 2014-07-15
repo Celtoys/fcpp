@@ -1,90 +1,9 @@
-/******************************************************************************
-Copyright (c) 1999 Daniel Stenberg
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-******************************************************************************/
-/******************************************************************************
- *                               FREXXWARE
- * ----------------------------------------------------------------------------
- *
- * Project: Frexx C Preprocessor
- * $Source: /home/user/start/cpp/RCS/usecpp.c,v $
- * $Revision: 1.6 $
- * $Date: 1994/06/02 09:11:01 $
- * $Author: start $
- * $State: Exp $
- * $Locker: start $
- *
- * ----------------------------------------------------------------------------
- * $Log: usecpp.c,v $
- * Revision 1.6  1994/06/02  09:11:01  start
- * Added the '-n' option!
- *
- * Revision 1.5  1994/06/02  08:51:49  start
- * Added three more command line parameters
- * Made -h invokes exit nice
- *
- * Revision 1.4  1994/01/24  09:37:17  start
- * Major difference.
- *
- * Revision 1.3  1993/12/06  13:51:20  start
- * A lot of new stuff (too much to mention)
- *
- * Revision 1.2  1993/11/11  07:16:39  start
- * New stuff
- *
- * Revision 1.1  1993/11/03  09:13:08  start
- * Initial revision
- *
- *
- *****************************************************************************/
-/**********************************************************************
- *
- * usecpp.c
- *
- * This is a routine that is should be used to call functions in the
- * fpp.library. We supply the own_input() and own_output() functions to
- * the preprocessor to remain flexible.
- */
+#define _CRT_SECURE_NO_WARNINGS
 
 #include <stdlib.h>
+#include "fcpp.h"
 
-#ifdef AMIGA
-#include <proto/exec.h>
-#include <exec/types.h>
-
-#if defined(SHARED)
-#include <exec/libraries.h>
-#include <libraries/dos.h>
-
-#include "fpp_pragmas.h"
-#include "fpp_protos.h"
-#include "FPPBase.h"
-struct Library *FPPBase=NULL;
-#define PREFIX __saveds
-#define REG(x) register __ ## x
-#else
-#define PREFIX
-#define REG(x)
-#endif
-
-#elif defined(UNIX)
+#if defined(UNIX)
 #if defined(OS9)
 #include <types.h>
 #else
@@ -106,7 +25,6 @@ struct Library *FPPBase=NULL;
 #define va_list void *
 #endif
 
-#include "fpp.h"
 #define MAX_TAGS 40 /* maximum number of tags allowed! */
 #define FILE_LOCAL static
 
@@ -117,9 +35,9 @@ struct Library *FPPBase=NULL;
 #define DEFAULT_CPP_PREFS_FILE "$HOME/cpp.prefs"
 #endif
 
-FILE_LOCAL char PREFIX *own_input(char *, int, void *);
-FILE_LOCAL void PREFIX own_output(int, void *);
-FILE_LOCAL void PREFIX own_error(void *, char *, va_list);
+FILE_LOCAL char *own_input(char *, int, void *);
+FILE_LOCAL void own_output(int, void *);
+FILE_LOCAL void own_error(void *, char *, va_list);
 FILE_LOCAL int SetOptions(int, char **, struct fppTag **);
 FILE_LOCAL char GetPrefs(struct fppTag **, char **);
 FILE_LOCAL char DoString(struct fppTag **, char *);
@@ -251,19 +169,19 @@ int main(int argc, char **argv)
 
 
 FILE_LOCAL
-char PREFIX *own_input(char *buffer, int size, void *userdata)
+char *own_input(char *buffer, int size, void *userdata)
 {
   return(fgets(buffer, size, stdin));
 }
 
 FILE_LOCAL
-void PREFIX own_output(int c, void *userdata)
+void own_output(int c, void *userdata)
 {
   putchar(c);
 }
 
 FILE_LOCAL
-void PREFIX own_error(void *userdata, char *format, va_list arg)
+void own_error(void *userdata, char *format, va_list arg)
 {
   vfprintf(stderr, format, arg);
 }
@@ -288,7 +206,7 @@ char GetPrefs(struct fppTag **tagptr, char **string)
     Length_U = ftell(PrefsFile_PF);
     fseek(PrefsFile_PF, 0, SEEK_SET);
 
-    if (*string = (char *)malloc(Length_U+1)) {
+    if ((*string = (char *)malloc(Length_U+1))) {
       fread(*string, 1, Length_U, PrefsFile_PF);
       (*string)[Length_U] = '\0';
       
@@ -301,7 +219,7 @@ char GetPrefs(struct fppTag **tagptr, char **string)
     }
   }
 
-  if(environ = getenv("CPP_PREFS")) {
+  if((environ = getenv("CPP_PREFS"))) {
     ret= !DoString(tagptr, environ);
     if(ret && *string)
       free( *string );
