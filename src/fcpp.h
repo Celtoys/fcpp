@@ -80,8 +80,8 @@ struct fppTag {
 /* Output the 'line' keyword on #line-lines? */
 #define FPPTAG_OUTPUTLINE 18 /* data is boolean, default is TRUE */
 
-/* Do not output the version information string */
-#define FPPTAG_IGNOREVERSION 19 /* data is boolean, default is FALSE */
+/* Output the version information string */
+#define FPPTAG_SHOWVERSION 19 /* data is boolean, default is TRUE */
 
 /* Output all included file names to stderr */
 #define FPPTAG_OUTPUTINCLUDES 20 /* data is boolean, default is FALSE */

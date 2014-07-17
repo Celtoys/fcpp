@@ -2426,7 +2426,7 @@ int dooptions(struct Global *global, struct fppTag *tags)
     case FPPTAG_OUTPUTINCLUDES:
       global->showincluded = tags->data?1:0;
       break;
-    case FPPTAG_IGNOREVERSION:
+    case FPPTAG_SHOWVERSION:
       global->showversion = tags->data?1:0;
       break;
     case FPPTAG_WARNILLEGALCPP:
