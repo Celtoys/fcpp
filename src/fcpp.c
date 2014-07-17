@@ -723,7 +723,7 @@ struct Global {
    */
   char  *include[NINCLUDE];
   char  includeshow[NINCLUDE]; /* show it or not! */
-  char  included;
+  int  included;
 
   /*
    * This is the table used to predefine target machine and operating
@@ -1125,7 +1125,7 @@ ReturnCode cppmain(struct Global *global)
   char define = 0; /* probability of a function define phase in the program */
   char prev = 0; /* previous type */
   char go = 0;
-  char include = 0;
+  int include = 0;
   char initfunc = 0;
 
   /* Initialize for reading tokens */
@@ -1740,7 +1740,7 @@ ReturnCode control( struct Global *global,
              */
             global->line = atoi(global->work) - 1;     /* Reset line number    */
 
-            for( tp = global->work; isdigit(*tp) || type[*tp] == SPA; tp++)
+            for( tp = global->work; isdigit(*tp) || type[(int)*tp] == SPA; tp++)
                 ;             /* Skip over digits */
 
             if( *tp != EOS )
@@ -2146,7 +2146,6 @@ ReturnCode openinclude( struct Global *global,
     char **incptr;
     char tmpname[NWORK]; /* Filename work area    */
     int len;
-    ReturnCode ret;
 
     #if HOST == SYS_AMIGADOS
     if( strchr (filename, ':') != NULL )
@@ -2818,7 +2817,7 @@ ReturnCode dodefine(struct Global *global)
 	quoting = 1;		        /* Maybe quoting op.	*/
 	continue;
       }
-      while (global->workp > global->work && type[global->workp[-1]] == SPA)
+      while (global->workp > global->work && type[(int)global->workp[-1]] == SPA)
 	--global->workp;		/* Erase leading spaces */
       if((ret=save(global, TOK_SEP)))     /* Stuff a delimiter    */
 	return(ret);
@@ -3374,7 +3373,7 @@ static char opdope[OP_MAX] = {
 #define S_QUEST 	1
 
 typedef struct optab {
-  char	op;			/* Operator			*/
+  int	op;			/* Operator			*/
   char	prec;			/* Its precedence		*/
   char	skip;			/* Short-circuit: TRUE to skip	*/
 } OPTAB;
@@ -4189,7 +4188,6 @@ int *evaleval(struct Global *global,
 
 INLINE FILE_LOCAL void outadefine(struct Global *, DEFBUF *);
 INLINE FILE_LOCAL void domsg(struct Global *, ErrorCode, va_list);
-FILE_LOCAL char *incmem(struct Global *, char *, int);
 
 /*
  * skipnl()     skips over input text to the end of the line.
