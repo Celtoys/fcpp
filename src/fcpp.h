@@ -1,4 +1,10 @@
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 struct fppTag {
   int tag;
   void *data;
@@ -120,3 +126,8 @@ struct fppTag {
 #define FPPTAG_WEBMODE 33
 
 int fppPreProcess(struct fppTag *);
+
+
+#ifdef __cplusplus
+}
+#endif
