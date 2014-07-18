@@ -814,6 +814,8 @@ struct Global {
   char outputfunctions;  /* output all discovered functions to stderr! */
 
   char webmode; /* WWW process mode */
+
+  char allowincludelocal;
 };
 
 typedef enum {
@@ -1072,6 +1074,8 @@ int fppPreProcess(struct fppTag *tags)
   global->rightconcat = FALSE;
   global->work[0] = '\0';
   global->initialfunc = NULL;
+
+  global->allowincludelocal = TRUE;
 
   memset(global->symtab, 0, SBSIZE * sizeof(DEFBUF *));
 
@@ -2161,7 +2165,7 @@ ReturnCode openinclude( struct Global *global,
         }
     #endif
 
-    if( searchlocal )
+    if( searchlocal && global->allowincludelocal )
         {
         /*
          * Look in local directory first.
@@ -2171,6 +2175,7 @@ ReturnCode openinclude( struct Global *global,
          * discarding the last pathname component of the source file
          * name then tacking on the #include argument.
          */
+
         if( hasdirectory( global->infile->filename, tmpname ) )
             strcat( tmpname, filename );
         else
@@ -2564,6 +2569,9 @@ int dooptions(struct Global *global, struct fppTag *tags)
       break;
     case FPPTAG_WEBMODE:
       global->webmode=(tags->data?1:0);
+      break;
+    case FPPTAG_ALLOW_INCLUDE_LOCAL:
+      global->allowincludelocal=(tags->data?1:0);
       break;
     default:
       cwarn(global, WARN_INTERNAL_ERROR, NULL);
