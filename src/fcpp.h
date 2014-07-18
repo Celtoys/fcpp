@@ -125,6 +125,9 @@ struct fppTag {
 /* Switch on WWW-mode */
 #define FPPTAG_WEBMODE 33
 
+/* Allow include "X" (rather than <X>) to search local files, default is TRUE */
+#define FPPTAG_ALLOW_INCLUDE_LOCAL 34
+
 int fppPreProcess(struct fppTag *);
 
 
