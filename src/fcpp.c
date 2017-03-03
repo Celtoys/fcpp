@@ -1097,7 +1097,6 @@ int fppPreProcess(struct fppTag *tags)
 #endif
   }
   fflush(stdout);
-  fclose(stdout);
 
   if (global->errors > 0 && !global->eflag)
     return(IO_ERROR);
@@ -4707,7 +4706,7 @@ DEFBUF *lookid(struct Global *global,
   int nhash;
   DEFBUF *dp;
   int ct;
-  int temp;
+  int temp = 0;
   int isrecurse;        /* For #define foo foo  */
 
   nhash = 0;
