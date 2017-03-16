@@ -1291,7 +1291,7 @@ ReturnCode cppmain(struct Global *global)
 	ret=scannumber(global, c, (ReturnCode(*)(struct Global *, int))output);
 	if(ret)
 	  return(ret);
-	catenate(gloabl, 1, &ret);  /* Check to see if the number is the lhs of a macro concat */
+	catenate(global, 1, &ret);  /* Check to see if the number is the lhs of a macro concat */
 	if (ret)
 	  return(ret);
 	break;
